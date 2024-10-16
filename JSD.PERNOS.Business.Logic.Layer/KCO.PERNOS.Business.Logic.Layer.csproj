@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JSD.PERNOS.Data.Access.Layer\JSD.PERNOS.Data.Access.Layer.csproj" />
-    <ProjectReference Include="..\JSD.PERNOS.DTO\JSD.PERNOS.DTO.csproj" />
+    <ProjectReference Include="..\JSD.PERNOS.Data.Access.Layer\KCO.PERNOS.Data.Access.Layer.csproj" />
+    <ProjectReference Include="..\JSD.PERNOS.DTO\KCO.PERNOS.DTO.csproj" />
 
   </ItemGroup>
 

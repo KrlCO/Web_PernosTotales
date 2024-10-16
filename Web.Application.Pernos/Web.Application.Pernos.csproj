@@ -23,7 +23,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\JSD.PERNOS.Business.Logic.Layer\JSD.PERNOS.Business.Logic.Layer.csproj" />
+    <ProjectReference Include="..\JSD.PERNOS.Business.Logic.Layer\KCO.PERNOS.Business.Logic.Layer.csproj" />
   </ItemGroup>
 
 </Project>

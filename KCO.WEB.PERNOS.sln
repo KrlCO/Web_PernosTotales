@@ -5,13 +5,13 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web.Application.Pernos", "Web.Application.Pernos\Web.Application.Pernos.csproj", "{83BEA04D-7754-4D98-80EC-E9B1A58EB56B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSD.PERNOS.Business.Entity.Layer", "JSD.PERNOS.Business.Entity.Layer\JSD.PERNOS.Business.Entity.Layer.csproj", "{6DB342FC-1358-44BE-9477-867444F0EDAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCO.PERNOS.Business.Entity.Layer", "JSD.PERNOS.Business.Entity.Layer\KCO.PERNOS.Business.Entity.Layer.csproj", "{6DB342FC-1358-44BE-9477-867444F0EDAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSD.PERNOS.DTO", "JSD.PERNOS.DTO\JSD.PERNOS.DTO.csproj", "{9F58B866-CE2D-4359-BE79-5F97C72296FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCO.PERNOS.DTO", "JSD.PERNOS.DTO\KCO.PERNOS.DTO.csproj", "{9F58B866-CE2D-4359-BE79-5F97C72296FD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSD.PERNOS.Data.Access.Layer", "JSD.PERNOS.Data.Access.Layer\JSD.PERNOS.Data.Access.Layer.csproj", "{D0C33DEB-03A9-4959-808B-2E2329016C55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCO.PERNOS.Data.Access.Layer", "JSD.PERNOS.Data.Access.Layer\KCO.PERNOS.Data.Access.Layer.csproj", "{D0C33DEB-03A9-4959-808B-2E2329016C55}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JSD.PERNOS.Business.Logic.Layer", "JSD.PERNOS.Business.Logic.Layer\JSD.PERNOS.Business.Logic.Layer.csproj", "{5DF45CA2-D264-4305-8B6D-1E462DB285B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KCO.PERNOS.Business.Logic.Layer", "JSD.PERNOS.Business.Logic.Layer\KCO.PERNOS.Business.Logic.Layer.csproj", "{5DF45CA2-D264-4305-8B6D-1E462DB285B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

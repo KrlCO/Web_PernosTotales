@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JSD.PERNOS.Business.Entity.Layer\JSD.PERNOS.Business.Entity.Layer.csproj" />
+    <ProjectReference Include="..\JSD.PERNOS.Business.Entity.Layer\KCO.PERNOS.Business.Entity.Layer.csproj" />
   </ItemGroup>
 
 </Project>
