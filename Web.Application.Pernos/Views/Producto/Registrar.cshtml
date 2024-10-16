@@ -1,0 +1,121 @@
+﻿@model Web.Application.Pernos.Models.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Registrar Producto";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Registrar Producto</title>
+
+    <!-- FontAwesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template-->
+    <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="~/css/sb-admin-2.css" rel="stylesheet">
+</head>
+<body id="page-top">
+    <div class="container">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-blue">Registrar Producto</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Registrar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="IdProducto" value="0" />
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtNombre">Nombre</label>
+                                    <input type="text" class="form-control form-control-sm" asp-for="Nombre" id="txtNombre" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtDescripcion">Descripción</label>
+                                    <input type="text" class="form-control form-control-sm" asp-for="Descripcion" id="txtDescripcion" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="cboCategoria">Categoría</label>
+                                    <select class="form-control form-control-sm" asp-for="IdCategoria" id="cboCategoria">
+                                        <option value="">Seleccionar</option>
+                                        @foreach (var categoria in ViewBag.Categorias)
+                                        {
+                                            <option value="@categoria.IdCategoria">@categoria.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="cboUnidadMedida">Unidad de Medida</label>
+                                    <select class="form-control form-control-sm" asp-for="IdUnidadMedida" id="cboUnidadMedida">
+                                        <option value="">Seleccionar</option>
+                                        @foreach (var unidad in ViewBag.UnidadesMedidas)
+                                        {
+                                            <option value="@unidad.IdUnidadMedida">@unidad.Nombre</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtStock">Stock</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="Stock" id="txtStock" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtPrecioCompra">Precio Compra (S/.)</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="PrecioCompra" id="txtPrecioCompra" step="0.01" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtMargenGanancia">Margen de Ganancia (%)</label>
+                                    <input type="number" class="form-control form-control-sm" id="txtMargenGanancia" step="0.01" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtPrecioVenta">Precio Venta (S/.)</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="PrecioVenta" id="txtPrecioVenta" step="0.01" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="cboEstado">Estado</label>
+                                    <select class="form-control form-control-sm" asp-for="Estado" id="cboEstado">
+                                        <option value="true">Activo</option>
+                                        <option value="false">No Activo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtImagen">Imagen</label>
+                                    <input class="form-control-file" type="file" asp-for="Imagen" id="txtImagen" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+                        <a class="btn btn-danger btn-sm" href="@Url.Action("Listar", "Producto")">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="~/js/sb-admin-2.js"></script>
+</body>
+</html>

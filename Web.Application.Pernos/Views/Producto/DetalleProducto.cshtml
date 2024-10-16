@@ -1,0 +1,83 @@
+﻿@model Web.Application.Pernos.Models.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Detalle del Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p><a href="@Url.Action("Catalogo", "Producto")">Volver al Catalogo</a></p>
+
+<!-- Product section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <div class="col-md-6">
+                <img class="card-img-top mb-5 mb-md-0" src="@Model.ImagenRuta" alt="@Model.Nombre" />
+            </div>
+            <div class="col-md-6">
+                <div class="small mb-1">SKU: @Model.IdProducto</div>
+                <h1 class="display-5 fw-bolder">@Model.Nombre</h1>
+                <div class="fs-5 mb-5">
+                    <span>S/ @Model.PrecioVenta.ToString("N2")</span>
+                </div>
+                <p class="lead">@Model.Descripcion</p>
+                <div class="d-flex">
+                    <input class="form-control text-center me-3" id="inputQuantity" type="number" value="1" style="max-width: 3rem" />
+                    <button class="btn btn-outline-dark flex-shrink-0" type="button" onclick="agregarAlCarrito(@Model.IdProducto, '@Model.Nombre', @Model.PrecioVenta)">
+                        <i class="bi-cart-fill me-1"></i>
+                        Agregar al carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function agregarAlCarrito(idProducto, nombre, precio) {
+            var cantidad = parseInt(document.getElementById('inputQuantity').value);
+
+            if (cantidad > 0) {
+                var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+                var productoExistente = carrito.find(p => p.idProducto === idProducto);
+
+                if (productoExistente) {
+                    productoExistente.cantidad += cantidad;
+                } else {
+                    carrito.push({
+                        idProducto: idProducto,
+                        nombre: nombre,
+                        precio: precio,
+                        cantidad: cantidad
+                    });
+                }
+
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                actualizarContadorCarrito();
+
+                // Notificación con SweetAlert
+                Swal.fire({
+                    title: 'Producto agregado',
+                    text: nombre + ' ha sido agregado al carrito.',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'La cantidad debe ser mayor a cero.',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
+        }
+
+        function actualizarContadorCarrito() {
+            var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            var totalProductos = carrito.reduce((acc, producto) => acc + producto.cantidad, 0);
+            document.getElementById('carrito-contador').textContent = totalProductos;
+        }
+    </script>
+}

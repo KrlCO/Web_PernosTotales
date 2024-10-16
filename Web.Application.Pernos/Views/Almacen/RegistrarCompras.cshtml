@@ -1,0 +1,101 @@
+﻿@model Web.Application.Pernos.Models.CompraViewModel
+
+@{
+    ViewData["Title"] = "Registrar Compra";
+}
+
+<div class="container">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-second-primary">
+            <h6 class="m-0 font-weight-bold text-blue">Registrar Compra</h6>
+        </div>
+        <div class="card-body">
+            <form asp-action="RegistrarCompra" method="post">
+                <!-- Información del proveedor -->
+                <div class="form-group">
+                    <label for="txtRUC">RUC</label>
+                    <input type="text" class="form-control" asp-for="RUC" id="txtRUC" required />
+                </div>
+                <div class="form-group">
+                    <label for="txtNombre">Nombre</label>
+                    <input type="text" class="form-control" asp-for="Nombre" id="txtNombre" required />
+                </div>
+                <div class="form-group">
+                    <label for="txtRazonSocial">Razón Social</label>
+                    <input type="text" class="form-control" asp-for="RazonSocial" id="txtRazonSocial" required />
+                </div>
+                <div class="form-group">
+                    <label for="txtDireccion">Dirección</label>
+                    <input type="text" class="form-control" asp-for="Direccion" id="txtDireccion" required />
+                </div>
+                <div class="form-group">
+                    <label for="txtTelefono">Teléfono</label>
+                    <input type="text" class="form-control" asp-for="Telefono" id="txtTelefono" />
+                </div>
+                <div class="form-group">
+                    <label for="txtContacto">Contacto</label>
+                    <input type="text" class="form-control" asp-for="Contacto" id="txtContacto" />
+                </div>
+
+                <!-- Información del almacén -->
+                <div class="form-group">
+                    <label for="cboAlmacen">Almacén</label>
+                    <select class="form-control" asp-for="IdAlmacen" id="cboAlmacen">
+                        <option value="">Seleccionar</option>
+                        @* @foreach (var almacen in ViewBag.Almacenes)
+                        {
+                            <option value="@almacen.IdAlmacen">@almacen.Nombre</option>
+                        } *@
+                    </select>
+                </div>
+
+                <!-- Detalle de productos -->
+                <div class="form-group">
+                    <label for="productosTable">Productos</label>
+                    <table class="table" id="productosTable">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @* @foreach (var item in Model.Detalles)
+                            {
+                                <tr>
+                                    <td>@item.NombreProducto</td>
+                                    <td>
+                                        <input type="number" class="form-control" asp-for="@item.Cantidad" required />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" asp-for="@item.Precio" step="0.01" required />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger" onclick="removerProducto(this)">Eliminar</button>
+                                    </td>
+                                </tr>
+                            } *@
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary" onclick="agregarProducto()">Agregar Producto</button>
+                </div>
+
+                <button type="submit" class="btn btn-success">Registrar Compra</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function agregarProducto() {
+            // Código para agregar un nuevo producto a la tabla de productos
+        }
+
+        function removerProducto(button) {
+            // Código para eliminar un producto de la tabla de productos
+        }
+    </script>
+}

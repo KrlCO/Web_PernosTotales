@@ -1,0 +1,44 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #3e4551;
+    color: white;
+}
+/*Agregados*/
+
+.footer__info-contact {
+    margin-top: 14px;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+/*.footer__info-contact li i {
+    position: absolute;
+    left: 0;
+}*/

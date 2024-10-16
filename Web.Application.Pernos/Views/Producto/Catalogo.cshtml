@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Web.Application.Pernos.Models.ProductoViewModel>
+
+@{
+    ViewData["Title"] = "Catalogo";
+}
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Pernos Totales</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <form class="d-flex" id="searchForm">
+                <input id="searchInput" class="form-control me-2" type="search" placeholder="Buscar" aria-label="Search">
+                <button id="searchButton" class="btn btn-outline-success" type="button">Buscar</button>
+            </form>
+
+
+            </div>
+        </div>
+    </nav>
+<!-- Vista "Catalogo" -->
+    <!-- Header-->
+    <header class="bg-light">
+        <div class="container-fluid px-0">
+            <div class="text-center text-white">
+            <img src="~/images/PernosTotales_Banner.webp" class="d-block w-100 h-100 object-cover" alt="Banner 2">
+            </div>
+        </div>
+    </header>
+
+    <section class="py-5">
+        <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                @foreach (var producto in Model)
+                {
+                    <div class="col mb-5">
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" src="@producto.ImagenRuta" alt="@producto.Nombre" />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">@producto.Nombre</h5>
+                                    <!-- Product price-->
+                                    <p>S/. @producto.PrecioVenta.ToString("N2")</p>
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                <div class="text-center mb-3">
+                                    <a class="btn btn-outline-primary w-100" href="@Url.Action("DetalleProducto", "Producto", new { id = producto.IdProducto })">
+                                        Ver detalles
+                                    </a>
+                                </div>
+                                <div class="text-center">
+                                    <a class="btn btn-outline-success w-100"  onclick="agregarAlCarrito(@producto.IdProducto, '@producto.Nombre', @producto.PrecioVenta, '@producto.ImagenRuta')">Agregar al carrito</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+@section scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            $('#searchButton').on('click', function (e) {
+                e.preventDefault();
+                let searchTerm = $('#searchInput').val().toLowerCase();
+                let found = false;
+
+                // Iterar sobre cada producto
+                $('.card').each(function () {
+                    let productName = $(this).find('.fw-bolder').text().toLowerCase();
+
+                    // Mostrar u ocultar el producto según coincida o no con la búsqueda
+                    if (productName.includes(searchTerm)) {
+                        $(this).parent().show();
+                        found = true;
+                    } else {
+                        $(this).parent().hide();
+                    }
+                });
+
+                // Mostrar SweetAlert si no se encontró ningún producto
+                if (!found) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sin coincidencias',
+                        text: 'No se encontraron coincidencias. Asegúrate que el nombre ingresado sea el correcto.',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        });
+
+        function agregarAlCarrito(idProducto, nombre, precioVenta, imagenRuta) {
+            // Obtener el carrito del localStorage o crear uno nuevo si no existe
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            // Verificar si el producto ya está en el carrito
+            let productoEnCarrito = carrito.find(p => p.idProducto === idProducto);
+
+            if (productoEnCarrito) {
+                // Si el producto ya está en el carrito, aumentar la cantidad
+                productoEnCarrito.cantidad++;
+            } else {
+                // Si el producto no está en el carrito, agregarlo
+                carrito.push({
+                    idProducto: idProducto,
+                    nombre: nombre,
+                    precioVenta: precioVenta,
+                    imagenRuta: imagenRuta,
+                    cantidad: 1
+                });
+            }
+        }
+    </script>
+}

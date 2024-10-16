@@ -1,0 +1,84 @@
+﻿@model Web.Application.Pernos.Models.ProductoViewModel
+
+@{
+    ViewData["Title"] = "Editar Producto";
+}
+
+    <div class="container">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3 bg-second-primary">
+                <h6 class="m-0 font-weight-bold text-blue">Editar Producto</h6>
+            </div>
+            <div class="card-body">
+                <form asp-action="Editar" method="post" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="IdProducto" />
+                    <input type="hidden" asp-for="ImagenRuta" />
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtNombre">Nombre</label>
+                                    <input type="text" class="form-control form-control-sm" asp-for="Nombre" id="txtNombre" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtDescripcion">Descripción</label>
+                                    <input type="text" class="form-control form-control-sm" asp-for="Descripcion" id="txtDescripcion" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="cboCategoria">Categoría</label>
+                                    <select class="form-control form-control-sm" asp-for="IdCategoria" asp-items="@(new SelectList(ViewBag.Categorias, "IdCategoria", "Nombre"))">
+                                        <option value="">Seleccionar</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="cboUnidadMedida">Unidad de Medida</label>
+                                    <select class="form-control form-control-sm" asp-for="IdUnidadMedida" asp-items="@(new SelectList(ViewBag.UnidadesMedidas, "IdUnidadMedida", "Nombre"))">
+                                        <option value="">Seleccionar</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtStock">Stock</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="Stock" id="txtStock" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="txtPrecioCompra">Precio Compra (S/.)</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="PrecioCompra" id="txtPrecioCompra" step="0.01" />
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtPrecioVenta">Precio Venta (S/.)</label>
+                                    <input type="number" class="form-control form-control-sm" asp-for="PrecioVenta" id="txtPrecioVenta" step="0.01" />
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="cboEstado">Estado</label>
+                                    <select class="form-control form-control-sm" asp-for="Estado">
+                                        <option value="true">Activo</option>
+                                        <option value="false">No Activo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-sm-6">
+                                    <label for="txtImagen">Imagen</label>
+                                    <input class="form-control-file" type="file" asp-for="Imagen" id="txtImagen" />
+                                    @if (Model.ImagenRuta != null)
+                                    {
+                                        <img src="@Model.ImagenRuta" alt="Imagen del Producto" style="max-width: 100px; max-height: 100px;" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm" type="submit">Guardar</button>
+                        <a class="btn btn-danger btn-sm" href="@Url.Action("Listar", "Producto")">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

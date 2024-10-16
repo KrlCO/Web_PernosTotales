@@ -1,0 +1,164 @@
+﻿@{
+    ViewData["Title"] = "Vale Salida / Entrada";
+}
+
+<div class="container mt-5">
+    <!-- Encabezado -->
+    <h2 class="text-center mb-4">VALE SALIDA / ENTRADA</h2>
+
+    <!-- Botones -->
+    <div class="d-flex justify-content-center mb-4">
+        <button id="nuevoButton" class="btn btn-primary mx-2">Nuevo</button>
+        <button id="btnCancelar" class="btn btn-danger mx-2">Cancelar</button>
+        <button class="btn btn-info mx-2">Imprimir</button>
+    </div>
+
+    <!-- Filas de Inputs -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="almacen" class="form-label">Almacén</label>
+            <select id="almacen" class="form-select">
+                <option value="">Seleccionar Almacén</option>
+               
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="tipoMovimiento" class="form-label">Tipo Movimiento</label>
+            <select id="tipoMovimiento" class="form-select">
+                <option value="">Seleccionar Tipo Movimiento</option>
+
+            </select>
+        </div>
+
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label for="numeroVale" class="form-label">Código Vale</label>
+            <div class="d-flex">
+                <input type="text" id="numeroVale" class="form-control me-2">
+                <button id="buscar" class="btn btn-primary" type="button">Buscar</button>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <label for="fecha" class="form-label">Fecha</label>
+            <input type="date" id="fecha" class="form-control">
+        </div>
+    </div>
+
+    <!-- Tabla de Detalles -->
+    <div class="table-responsive">
+        <table id="valesTable" class="table table-bordered">
+            <thead class="table-light text-center">
+                <tr>
+                    <th>Código Vale</th>
+                    <th>Tipo Movimiento</th>
+                    <th>Tipo Registro</th>
+                    <th>Fecha Registro</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap5.min.js"></script>
+    <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+
+    <script>
+        $(document).ready(function () {
+            $('#nuevoButton').on('click', function () {
+                window.location.href = '@Url.Action("ValeSalida", "Almacen")';
+            });
+
+            var table = $('#valesTable').DataTable({
+                processing: true,
+                serverSide: false,
+                ajax: {
+                    url: '@Url.Action("ListarVales", "Almacen")',
+                    data: function (d) {
+                        d.idAlmacen = $('#almacen').val();
+                        d.idTipoMovimiento = $('#tipoMovimiento').val();
+                        d.codigoVale = $('#numeroVale').val();
+                        d.fechaRegistro = $('#fecha').val();
+                    },
+                    dataSrc: 'data' 
+                },
+                columns: [
+                    { data: 'codigoVale' },
+                    { data: 'tipoMovimiento' }, 
+                    { data: 'tipo' },
+                    { data: 'fechaRegistro' },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="btn btn-sm btn-primary">Modificar</button>' +
+                                '<button class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>';
+
+                        }
+                    }
+                ]
+            });
+
+            $('#buscar').on('click', function () {
+                table.ajax.reload();
+            });
+        });
+
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("ObtenerAlmacenes", "Almacen")',
+                type: 'GET',
+                success: function (data) {
+                    var $almacen = $('#almacen');
+                    $almacen.empty();
+                    $almacen.append('<option>Seleccionar Almacén</option>');
+
+                    $.each(data, function (index, item) {
+                        $almacen.append('<option value="' + item.idAlmacen + '">' + item.nombreAlmacen + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al obtener los almacenes:', error);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            // Obtener los tipos de movimiento cuando la página cargue
+            $.ajax({
+                url: '@Url.Action("ListarTiposMovimiento", "Almacen")',
+                type: 'GET',
+                success: function (data) {
+                    var $tipoMovimiento = $('#tipoMovimiento');
+                    $tipoMovimiento.empty();
+                    $tipoMovimiento.append('<option>Seleccionar Tipo Movimiento</option>');
+
+                    if (data.error) {
+                        console.error('Error en el servidor:', data.error);
+                        return;
+                    }
+
+                    // Recorrer los datos y agregarlos al select
+                    $.each(data, function (index, item) {
+                        $tipoMovimiento.append('<option value="' + item.idTipoMovimiento + '">' + item.tipoMovimiento + '</option>');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error al obtener los tipos de movimiento:', error);
+                }
+            });
+        });
+
+
+
+    </script>
+}
+
+

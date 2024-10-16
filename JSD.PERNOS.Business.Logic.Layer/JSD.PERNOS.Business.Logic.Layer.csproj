@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.32" />
+    <PackageReference Include="PasswordGenerator" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JSD.PERNOS.Data.Access.Layer\JSD.PERNOS.Data.Access.Layer.csproj" />
+    <ProjectReference Include="..\JSD.PERNOS.DTO\JSD.PERNOS.DTO.csproj" />
+
+  </ItemGroup>
+
+</Project>

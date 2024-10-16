@@ -1,0 +1,341 @@
+﻿@model IEnumerable<Web.Application.Pernos.Models.ProductoViewModel>
+
+@{
+    ViewData["Title"] = "Realizar Pago";
+}
+
+<section class="h-100 h-custom" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body p-4">
+                        <div class="row">
+                            <!-- Carrito de Compras -->
+                            <div class="col-lg-7">
+                                <h5 class="mb-3">
+                                    <a href="@Url.Action("Carrito", "Tienda")" class="text-body">
+                                        <i class="fas fa-long-arrow-alt-left me-2"></i>Volver al carrito
+                                    </a>
+                                </h5>
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <p class="mb-1">Carrito de compras</p>
+                                        <p class="mb-0">Tienes <span id="cantidad-items">0</span> items en tu carrito</p>
+                                    </div>
+                                </div>
+
+                                <div id="lista-productos-carrito">
+   
+                                </div>
+                            </div>
+
+                            <!-- Resumen de Pago -->
+                            <div class="col-lg-5">
+                                <div class="card bg-primary text-white rounded-3">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center mb-4">
+                                            <h5 class="mb-0">Detalles de Pago</h5>
+                                            <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+                                                 class="img-fluid rounded-3" style="width: 45px;" alt="Avatar">
+                                        </div>
+
+                                        <form class="mt-4" id="form-pago">
+                                            <!-- Nombre del Titular -->
+                                            <div class="form-outline form-white mb-4">
+                                                <input type="text" id="nombreTitular" class="form-control form-control-lg"
+                                                       placeholder="Nombre del titular de la tarjeta" />
+                                                <label class="form-label" for="nombreTitular">Nombre del titular</label>
+                                            </div>
+
+                                            <!-- Número de Tarjeta -->
+                                            <div class="form-outline form-white mb-4">
+                                                <input type="text" id="numeroTarjeta" class="form-control form-control-lg"
+                                                       placeholder="1234 5678 9012 3457" />
+                                                <label class="form-label" for="numeroTarjeta">Número de Tarjeta</label>
+                                            </div>
+
+                                            <!-- Fecha de Expiración y CVV -->
+                                            <div class="row mb-4">
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" id="fechaExpiracion" class="form-control form-control-lg"
+                                                               placeholder="MM/AAAA" />
+                                                        <label class="form-label" for="fechaExpiracion">Expiración</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-outline form-white">
+                                                        <input type="text" id="cvv" class="form-control form-control-lg"
+                                                               placeholder="&#9679;&#9679;&#9679;" />
+                                                        <label class="form-label" for="cvv">CVV</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <hr class="my-4">
+
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-2">Subtotal</p>
+                                            <p class="mb-2" id="subtotal">$0.00</p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-2">Envío</p>
+                                            <p class="mb-2" id="envio">S/. 20.00</p>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between mb-4">
+                                            <p class="mb-2">Total (Incl. IGV)</p>
+                                            <p class="mb-2" id="total"></p>
+                                        </div>
+
+                                        <button class="btn btn-info btn-block btn-lg" type="button" onclick="procesarPago()">
+                                            <div class="d-flex justify-content-between">
+                                                <span id="total-pagar"></span>
+                                                <span>Pagar <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
+                                            </div>
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+    <script>
+
+        $('#form-pago').submit(function (e) {
+            e.preventDefault();
+
+            var productos = [];  // Captura los productos del carrito
+            $('#lista-productos-carrito .producto-item').each(function () {
+                var idProducto = $(this).data('id-producto');
+                var cantidad = $(this).find('.cantidad').val();
+                var precio = $(this).find('.precio').text();
+
+                productos.push({
+                    IdProducto: idProducto,
+                    Cantidad: cantidad,
+                    Precio: precio
+                });
+            });
+
+            var data = {
+                FechaVenta: new Date().toISOString().split('T')[0],
+                Productos: productos
+            };
+
+            $.ajax({
+                url: '@Url.Action("RegistrarVenta", "Tienda")',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json; charset=utf-8',
+                success: function (response) {
+                    alert('Venta registrada exitosamente');
+                    window.location.href = '@Url.Action("ConfirmacionPago", "Tienda")';
+                },
+                error: function () {
+                    alert('Error al registrar la venta');
+                }
+            });
+        });
+
+
+        $(document).ready(function () {
+            // Obtener el carrito desde el localStorage
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            // Contenedor donde se mostrarán los productos del carrito
+            let contenedorCarrito = $('#lista-productos-carrito');
+            let cantidadItems = $('#cantidad-items');
+            let subtotal = 0;
+
+            // Limpiar el contenedor
+            contenedorCarrito.empty();
+
+            // Verificar si el carrito está vacío
+            if (carrito.length === 0) {
+                Swal.fire({
+                    title: 'Carrito vacío',
+                    text: 'No tienes productos en el carrito.',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar'
+                });
+                return;
+            } else {
+                // Mostrar la cantidad de productos
+                cantidadItems.text(carrito.length);
+
+                // Recorrer los productos del carrito y mostrarlos en la vista
+                carrito.forEach(producto => {
+                    subtotal += producto.precioVenta * producto.cantidad;
+                    contenedorCarrito.append(`
+                        <div class="card mb-2 card-producto">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                        <img class="rounded" src="${producto.imagenRuta}" style="width:100px;height:100px" />
+                                    </div>
+                                    <div class="col-sm-4 align-self-center">
+                                        <span class="font-weight-bold d-block">${producto.nombre}</span>
+                                    </div>
+                                    <div class="col-sm-2 align-self-center">
+                                        <span>Precio : S/. ${producto.precioVenta.toFixed(2)}</span>
+                                    </div>
+                                    <div class="col-sm-2 align-self-center">
+                                        <span>Cantidad : ${producto.cantidad}</span>
+                                    </div>
+                                    <div class="col-sm-2 align-self-center">
+                                        <span>Total : S/. ${(producto.precioVenta * producto.cantidad).toFixed(2)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                // Calcular el IGV
+                let igv = subtotal * 0.18;
+
+                // Mostrar el subtotal en la sección de pago
+                $('#subtotal').text(`S/. ${subtotal.toFixed(2)}`);
+                let envio = 20.00; // Valor fijo para el envío
+                let total = subtotal + envio + igv;
+                $('#total').text(`S/. ${total.toFixed(2)}`);
+                $('#total-pagar').text(`S/. ${total.toFixed(2)}`);
+            }
+        });
+
+        function procesarPago() {
+            // Validar el formulario antes de proceder
+            if (!validarFormulario()) {
+                return;  // Si el formulario no es válido, no continuar
+            }
+
+            // Captura productos del carrito desde localStorage
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            // Verifica si hay productos en el carrito
+            if (carrito.length === 0) {
+                Swal.fire({
+                    title: 'Carrito vacío',
+                    text: 'No hay productos en el carrito.',
+                    icon: 'warning',
+                    confirmButtonText: 'Aceptar'
+                });
+                return;
+            }
+
+            let ventaDTO = {
+                IdAlmacen: 1,
+                Carrito: carrito.map(producto => ({
+                    IdProducto: producto.idProducto,
+                    Cantidad: producto.cantidad,
+                    Precio: producto.precioVenta
+                }))
+            };
+
+            // AJAX para enviar los datos
+            $.ajax({
+                url: '@Url.Action("RegistrarVenta", "Tienda")',
+                type: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(ventaDTO),
+
+                success: function (response) {
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: 'Pago realizado exitosamente',
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Limpiar carrito
+                            localStorage.removeItem('carrito');
+                            // Redirigir a la página de confirmación de pago
+                            window.location.href = '@Url.Action("ConfirmacionPago", "Tienda")';
+                        }
+                    });
+                },
+                error: function (error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Error al procesar la venta.',
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            });
+        }
+
+        function validarFormulario() {
+            // REGEX
+            const regexNombre = /^[A-Za-z\s]+$/;
+            const regexTarjeta = /^\d{16}$/;
+            const regexExpiracion = /^(0[1-9]|1[0-2])\/\d{4}$/;
+            const regexCVV = /^\d{3}$/;
+
+            // Obtener los campos del formulario
+            const nombreTitular = document.getElementById('nombreTitular');
+            const numeroTarjeta = document.getElementById('numeroTarjeta');
+            const fechaExpiracion = document.getElementById('fechaExpiracion');
+            const cvv = document.getElementById('cvv');
+
+            let formularioValido = true;
+
+            // Validar nombre del titular
+            if (!regexNombre.test(nombreTitular.value) || nombreTitular.value.trim() === "") {
+                nombreTitular.classList.add('is-invalid');
+                nombreTitular.nextElementSibling.textContent = "Por favor, ingresa un nombre válido.";
+                formularioValido = false;
+            } else {
+                nombreTitular.classList.remove('is-invalid');
+                nombreTitular.classList.add('is-valid');
+            }
+
+            // Validar número de tarjeta
+            if (!regexTarjeta.test(numeroTarjeta.value) || numeroTarjeta.value.trim() === "") {
+                numeroTarjeta.classList.add('is-invalid');
+                numeroTarjeta.nextElementSibling.textContent = "Por favor, ingresa un número de tarjeta válido.";
+                formularioValido = false;
+            } else {
+                numeroTarjeta.classList.remove('is-invalid');
+                numeroTarjeta.classList.add('is-valid');
+            }
+
+            // Validar fecha de expiración
+            if (!regexExpiracion.test(fechaExpiracion.value) || fechaExpiracion.value.trim() === "") {
+                fechaExpiracion.classList.add('is-invalid');
+                fechaExpiracion.nextElementSibling.textContent = "Por favor, ingresa una fecha de expiración válida.";
+                formularioValido = false;
+            } else {
+                fechaExpiracion.classList.remove('is-invalid');
+                fechaExpiracion.classList.add('is-valid');
+            }
+
+            // Validar CVV
+            if (!regexCVV.test(cvv.value) || cvv.value.trim() === "") {
+                cvv.classList.add('is-invalid');
+                cvv.nextElementSibling.textContent = "Por favor, ingresa un CVV válido.";
+                formularioValido = false;
+            } else {
+                cvv.classList.remove('is-invalid');
+                cvv.classList.add('is-valid');
+            }
+
+            return formularioValido;
+        }
+
+
+    </script>
+}

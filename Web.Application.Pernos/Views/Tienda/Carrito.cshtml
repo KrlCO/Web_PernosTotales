@@ -1,0 +1,206 @@
+﻿@model IEnumerable<Web.Application.Pernos.Models.ProductoViewModel>
+
+@{
+    ViewData["Title"] = "Carrito";
+}
+
+
+<div class="container my-5">
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="card">
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <!--Detalle del producto-->
+                        <div class="col-sm-9">
+                            <div class="me-2">
+                                <div class="d-flex justify-content-between">
+                                <h5 class="ms-2 mt-2">Detalle Carrito</h5>
+                                <a class="btn btn-primary" href="@Url.Action("Catalogo", "Producto")"><i class="fas fa-cart-plus"></i>Continuar Comprando</a>
+                                </div>
+
+                            </div>
+
+                            <hr class="mt-2 mb-2">
+                            <div id="productos-carrito">
+
+                                <div class="card mb-2 card-producto">
+
+                                    <div class="card-body">
+                                        <div class="row">
+
+                                            <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                                <img class="rounded" src="~/Images/RodamientoSKF.jpg" style="width:100px;height:100px" />
+                                            </div>
+
+                                            <div class="col-sm-4 align-self-center">
+                                                <span class="font-wight-bold d-block">Marca</span>
+                                                <span>Nombre Producto</span>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <span>Precio : S/. 69,00</span>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <div class="d-flex">
+
+                                                    <button class="btn btn-outline-secondary btn-restar rounded-0">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <input class="form-control input-cantidad p-1 text-center rounded-0" disabled style="width:40px"/>
+                                                    <button class="btn btn-outline-secondary btn-sumar rounded-0">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-2 align-self-center">
+                                                <button class="btn btn-outline-danger btn-eliminar"><i class="far fa-trash-alt"></i>Eliminar</button>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                                <!--Detalle envio-->
+                        <div class="col-sm-3">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <h5 class="card-title">Detalle Envio</h5>
+                                    <form>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Nombre Contacto:</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtnombrecontacto" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Numero de Contacto:</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtnumerocontacto" autocomplete="off">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label for="exampleInputEmail" class="form-label">Direccion:</label>
+                                            <input type="text" class="form-control form-control-sm" id="txtdireccion" autocomplete="off">
+                                        </div>
+                                        <div class="d-grid">
+                                            <button class="btn btn-success" type="button" onclick="window.location.href='@Url.Action("RegistrarVenta", "Tienda")'">
+                                                <i class="fab fa-paypal"></i>Finalizar y Procesar Pago
+                                            </button>
+
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            // Obtener el carrito desde el localStorage
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            // Contenedor donde se mostrarán los productos del carrito
+            let contenedorCarrito = $('#productos-carrito');
+
+            // Limpiar el contenedor
+            contenedorCarrito.empty();
+
+            // Verificar si el carrito está vacío
+            if (carrito.length === 0) {
+                contenedorCarrito.append('<p>No hay productos en el carrito.</p>');
+            } else {
+                // Recorrer los productos del carrito y mostrarlos en la vista
+                carrito.forEach(producto => {
+                    contenedorCarrito.append(`
+                            <div class="card mb-2 card-producto">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-2 align-self-center d-flex justify-content-center">
+                                            <img class="rounded" src="${producto.imagenRuta}" style="width:100px;height:100px" />
+                                        </div>
+                                        <div class="col-sm-4 align-self-center">
+                                            <span class="font-weight-bold d-block">${producto.nombre}</span>
+                                        </div>
+                                        <div class="col-sm-2 align-self-center">
+                                            <span>Precio : S/. ${producto.precioVenta.toFixed(2)}</span>
+                                        </div>
+                                        <div class="col-sm-2 align-self-center">
+                                            <div class="d-flex">
+                                                <button class="btn btn-outline-secondary btn-restar rounded-0" onclick="restarCantidad(${producto.idProducto})">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <input class="form-control input-cantidad p-1 text-center rounded-0" value="${producto.cantidad}" style="width:40px" disabled />
+                                                <button class="btn btn-outline-secondary btn-sumar rounded-0" onclick="sumarCantidad(${producto.idProducto})">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2 align-self-center">
+                                            <button class="btn btn-outline-danger btn-eliminar" onclick="eliminarProducto(${producto.idProducto})">
+                                                <i class="far fa-trash-alt"></i> Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                });
+            }
+        });
+
+        function restarCantidad(idProducto) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let producto = carrito.find(p => p.idProducto === idProducto);
+
+            if (producto) {
+                if (producto.cantidad > 1) {
+                    producto.cantidad--;
+                } else {
+                    carrito = carrito.filter(p => p.idProducto !== idProducto);
+                }
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                location.reload();  // Recargar la página para reflejar los cambios
+            }
+        }
+
+        function sumarCantidad(idProducto) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            let producto = carrito.find(p => p.idProducto === idProducto);
+
+            if (producto) {
+                producto.cantidad++;
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                location.reload();  // Recargar la página para reflejar los cambios
+            }
+        }
+
+        function eliminarProducto(idProducto) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            carrito = carrito.filter(p => p.idProducto !== idProducto);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            location.reload();  // Recargar la página para reflejar los cambios
+        }
+    </script>
+
+
+}
