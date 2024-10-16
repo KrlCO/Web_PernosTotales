@@ -1,5 +1,4 @@
-﻿using JSD.SUNKU.Business.Entity.Layer.Utils;
-//using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿//using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 //using Microsoft.IdentityModel.Tokens;

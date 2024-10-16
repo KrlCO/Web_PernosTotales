@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using JSD.PERNOS.Business.Logic.Layer.Utils;
+//using JSD.PERNOS.Business.Logic.Layer.Utils;
 using JSD.SUNKU.Business.Entity.Layer;
 using JSD.SUNKU.Business.Logic.Layer.Interfaces;
 using JSD.SUNKU.Data.Access.Layer.Implementation;
@@ -28,7 +28,7 @@ namespace JSD.SUNKU.Business.Logic.Layer.Implementation
             }
             var usuario = _mapper.Map<Usuario>(usuarioDto);
             usuario.UserName = usuario.CodUsuario;
-            usuario.Estado = Constantes.Estado.Activo;
+            //usuario.Estado = Constantes.Estado.Activo;
             usuario.FecRegistra = DateTime.Now;
             usuario.UsrRegistra = userJWT.CodUsuario;
             result.Resultado = _usuarioRepository.Registrar(usuario);
@@ -65,7 +65,7 @@ namespace JSD.SUNKU.Business.Logic.Layer.Implementation
 
             var usuario = new Usuario();
             usuario.Id = id;
-            usuario.Estado = Constantes.Estado.Inactivo;
+            //usuario.Estado = Constantes.Estado.Inactivo;
             usuario.UsrModifica = userJWT.CodUsuario;
             usuario.FecModifica = DateTime.Now;
             result.Resultado = _usuarioRepository.Eliminar(usuario);
@@ -89,10 +89,15 @@ namespace JSD.SUNKU.Business.Logic.Layer.Implementation
             return result;
         }
 
-        public IEnumerable<Usuario> GetUsuarios(string tipoUser) => 
-            _usuarioRepository.GetUsuarios(Constantes.Estado.Activo, tipoUser);
+        //public IEnumerable<Usuario> GetUsuarios(string tipoUser) => 
+        //    _usuarioRepository.GetUsuarios(Constantes.Estado.Activo, tipoUser);
 
         public Usuario GetUsuarioById(int id) => 
             _usuarioRepository.GetUsuarioById(id);
+
+        public IEnumerable<Usuario> GetUsuarios(string tipoUser)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
